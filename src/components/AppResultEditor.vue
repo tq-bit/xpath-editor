@@ -15,13 +15,11 @@ const props = defineProps<{
 const editorContainer = ref<HTMLDivElement | null>(null);
 
 const content = computed(() => {
-  console.log(props.xml);
   // Early returns for empty results
   if (!props.xml || props.xml.length === 0) return "";
 
   // Evaluation shows only the first result and text
   if (props.xml.length === 1 && props.xml[0].isEvaluation) {
-    console.log(props.xml[0].text);
     return props.xml[0].text;
   }
 

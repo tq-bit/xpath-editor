@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import AppXmlEditor from "./components/AppXmlEditor.vue";
 import AppResultEditor from "./components/AppResultEditor.vue";
 import AppCheatsheetButton from "./components/AppCheatsheetButton.vue";
@@ -10,32 +10,19 @@ import SplitterPanel from "primevue/splitterpanel";
 import Message from "primevue/message";
 import Toolbar from "primevue/toolbar";
 import Button from "primevue/button";
-import { useDarkTheme } from "./composables/useDarkTheme";
+import InputGroup from "primevue/inputgroup";
+import InputGroupAddon from "primevue/inputgroupaddon";
 
-const query = ref("//ProductID");
-const xml =
-  ref(`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
-  <soapenv:Header/>
-  <soapenv:Body>
-    <List>
-      <Product>
-        <ProductID>HT-2001</ProductID>
-        <ProductName>Professional Dry Cleaning Machine</ProductName>
-        <ProductPrice>1999.99</ProductPrice>
-      </Product>
-      <Product>
-        <ProductID>HT-1020</ProductID>
-        <ProductName>Compact Dry Cleaning Unit</ProductName>
-        <ProductPrice>799.50</ProductPrice>
-      </Product>
-      <Product>
-        <ProductID>HT-7000</ProductID>
-        <ProductName>Industrial Dry Cleaning System</ProductName>
-        <ProductPrice>5499.00</ProductPrice>
-      </Product>
-    </List>
-  </soapenv:Body>
-</soapenv:Envelope>`);
+import { useDarkTheme } from "./composables/useDarkTheme";
+import { useXpathStore } from "./composables/useXpathStore";
+import AppXpathHistory from "./components/AppXpathHistory.vue";
+import AppSaveToHistoryDialog from "./components/AppSaveToHistoryDialog.vue";
+
+const { recentQuery, recentXml, setRecentQuery, setRecentXml } =
+  useXpathStore();
+
+const query = ref("");
+const xml = ref("");
 const result = ref<AppXPathResult[]>([]);
 const error = ref<string>("");
 const successMessage = computed(() => {
@@ -48,12 +35,25 @@ const successMessage = computed(() => {
     : "No results found";
 });
 
+// Handle recent query values from localstorage
+watch(query, () => {
+  setRecentQuery(query.value);
+});
+watch(xml, () => {
+  setRecentXml(xml.value);
+});
+
+onMounted(() => {
+  query.value = recentQuery.value;
+  xml.value = recentXml.value;
+});
+
 const { isDarkTheme, toggleDarkTheme } = useDarkTheme();
 </script>
 
 <template>
   <div class="container-fluid mx-auto p-4">
-    <Toolbar class="mb-4">
+    <Toolbar class="mb-8">
       <template #start>
         <img
           alt="Vue logo"
@@ -76,16 +76,22 @@ const { isDarkTheme, toggleDarkTheme } = useDarkTheme();
     </Toolbar>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="mb-4">
-        <FloatLabel variant="in">
-          <label for="query">Write your XPath query</label>
-          <InputText
-            id="query"
-            v-model="query"
-            rows="4"
-            cols="40"
-            class="w-full"
-          />
-        </FloatLabel>
+        <InputGroup>
+          <FloatLabel variant="over">
+            <label for="query">Write your XPath query</label>
+            <InputText
+              id="query"
+              v-model="query"
+              rows="4"
+              cols="40"
+              class="w-full"
+            />
+          </FloatLabel>
+          <InputGroupAddon>
+            <AppSaveToHistoryDialog />
+            <AppXpathHistory />
+          </InputGroupAddon>
+        </InputGroup>
       </div>
       <div class="mb-4">
         <Message v-if="error" severity="error">{{ error }}</Message>
