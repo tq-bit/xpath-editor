@@ -54,7 +54,7 @@ ${props.xml
         automaticLayout: true,
       }"
       class="w-full"
-      :height="800"
+      :height="1000"
       language="xml"
       disabled
       :value="content"

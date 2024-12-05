@@ -112,7 +112,7 @@ onMounted(executeQuery);
 <template>
   <div ref="editorContainer" class="w-full">
     <MonacoEditor
-      theme="vs-dark"
+      :theme="theme"
       :options="{
         colorDecorators: true,
         lineHeight: 24,
@@ -122,7 +122,7 @@ onMounted(executeQuery);
         automaticLayout: true,
       }"
       class="w-full"
-      :height="800"
+      :height="1000"
       language="xml"
       :value="xml"
       @change="handleChange"
