@@ -1,5 +1,8 @@
-# Vue 3 + TypeScript + Vite
+# XPath Editor - an interactive XML query tool
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+User interface written in Vue3, using [fontoxpath](https://github.com/FontoXML/fontoxpath) to evaluate XPath queries on an XML document. 
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+The app features live preview, basic syntax highlighting by monacco editor and a simple way to test queries against an XML file.
+
+> [!example]
+> [Open demo in gh-pages](https://tq-bit.github.io/xpath-editor/)
