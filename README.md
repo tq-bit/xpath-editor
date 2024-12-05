@@ -4,5 +4,5 @@ User interface written in Vue3, using [fontoxpath](https://github.com/FontoXML/f
 
 The app features live preview, basic syntax highlighting by monacco editor and a simple way to test queries against an XML file.
 
-> [!example]
+> [!EXAMPLE]
 > [Open demo in gh-pages](https://tq-bit.github.io/xpath-editor/)
