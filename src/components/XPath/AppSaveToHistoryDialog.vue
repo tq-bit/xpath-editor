@@ -1,38 +1,47 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import Dialog from "primevue/dialog";
+// PrimeVue Imports
 import Button from "primevue/button";
+import Dialog from "primevue/dialog";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
 import Message from "primevue/message";
 import { useToast } from "primevue/usetoast";
 
-import { useXpathStore } from "../composables/useXpathStore";
-const visible = ref(false);
+// Vue Imports
+import { ref } from "vue";
 
-const { recentQuery, recentXml, addToHistory } = useXpathStore();
+// Composables
+import { useXpathStore } from "../../composables/useXpathStore";
+
+// Constants and Refs
+const visible = ref(false);
 const description = ref("");
+const { recentQuery, recentXml, addToHistory } = useXpathStore();
+const toast = useToast();
+
+// Helper Functions
+const generateUUID = () => {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c == "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
+
+// Event Handlers
 const onSubmit = () => {
   addToHistory({
-    id: (() => {
-      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-        /[xy]/g,
-        function (c) {
-          const r = (Math.random() * 16) | 0;
-          const v = c == "x" ? r : (r & 0x3) | 0x8;
-          return v.toString(16);
-        }
-      );
-    })(),
+    id: generateUUID(),
     description: description.value,
     query: recentQuery.value,
     xml: recentXml.value,
     createdAt: new Date().toLocaleString("de-DE"),
   });
   visible.value = false;
-  useToast().add({
+  toast.add({
     severity: "success",
-    summary: "Form is submitted.",
+    summary: "Saved to history",
+    detail: description.value,
     life: 3000,
   });
 };

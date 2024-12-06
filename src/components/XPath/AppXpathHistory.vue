@@ -1,55 +1,49 @@
 <script setup lang="ts">
+// Vue core imports
 import { computed, ref } from "vue";
+
+// UI Components
 import Button from "primevue/button";
 import Drawer from "primevue/drawer";
 import Tree from "primevue/tree";
 import Message from "primevue/message";
 
-import { useXpathStore } from "../composables/useXpathStore";
-import { useDarkTheme } from "../composables/useDarkTheme";
+// Composables
+import { useXpathStore } from "../../composables/useXpathStore";
+import { useDarkTheme } from "../../composables/useDarkTheme";
 
+// Component state
 const visible = ref(false);
-
 const { isDarkTheme } = useDarkTheme();
-const { history, removeFromHistory, setRecentQuery, setRecentXml } =
-  useXpathStore();
+const { history, removeFromHistory, setRecentQuery, setRecentXml } = useXpathStore();
+
+// Computed properties
 const localHistory = computed(() => {
-  return history.value.map((item) => {
-    return {
-      label: item.description,
-      key: `root-item-${item.id}`,
-      children: [
-        {
-          icon: "pi pi-clock",
-          key: `query-item-${item.id}`,
-          label: "Query",
-          children: [
-            {
-              key: `query-detail-${item.id}`,
-              label: item.query,
-            },
-          ],
-        },
-        {
-          icon: "pi pi-code",
-          key: `xml-item-${item.id}`,
-          label: "XML",
-          children: [
-            {
-              key: `xml-detail-${item.id}`,
-              label: item.xml,
-            },
-          ],
-        },
-      ],
-    };
-  });
+  return history.value.map((item) => ({
+    label: item.description,
+    key: `root-item-${item.id}`,
+    children: [
+      {
+        icon: "pi pi-clock",
+        key: `query-item-${item.id}`,
+        label: "Query",
+        children: [{ key: `query-detail-${item.id}`, label: item.query }],
+      },
+      {
+        icon: "pi pi-code",
+        key: `xml-item-${item.id}`,
+        label: "XML",
+        children: [{ key: `xml-detail-${item.id}`, label: item.xml }],
+      },
+    ],
+  }));
 });
 
+// Event handlers
 const onClickHistoryItem = (id: string) => {
-  const item = history.value.find(
-    (item) => item.id === id.replace("root-item-", "")
-  ) as AppXpathStoreItem | undefined;
+  const itemId = id.replace("root-item-", "");
+  const item = history.value.find((item) => item.id === itemId) as AppXpathStoreItem | undefined;
+  
   if (item) {
     visible.value = false;
     setRecentQuery(item.query);
@@ -58,9 +52,9 @@ const onClickHistoryItem = (id: string) => {
 };
 
 const onDeleteHistoryItem = (id: string) => {
-  const item = history.value.find(
-    (item) => item.id === id.replace("root-item-", "")
-  ) as AppXpathStoreItem | undefined;
+  const itemId = id.replace("root-item-", "");
+  const item = history.value.find((item) => item.id === itemId) as AppXpathStoreItem | undefined;
+  
   if (item) {
     removeFromHistory(item.id);
   }
