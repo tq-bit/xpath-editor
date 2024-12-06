@@ -33,7 +33,7 @@ const onSave = () => {
 </script>
 
 <template>
-  <Button icon="pi pi-save" severity="secondary" text @click="visible = true" />
+  <Button v-tooltip.top="'Save this query'" icon="pi pi-save" severity="secondary" text @click="visible = true" />
   <Dialog v-model:visible="visible" modal header="Save this XPath query">
     <Message severity="info" class="mb-4">
       <p>All query and xml data is stored in your device's browser</p>

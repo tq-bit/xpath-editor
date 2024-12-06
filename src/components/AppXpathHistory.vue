@@ -68,7 +68,7 @@ const onDeleteHistoryItem = (id: string) => {
 </script>
 
 <template>
-  <Button icon="pi pi-book" severity="secondary" text @click="visible = true" />
+  <Button v-tooltip.top="'Stored queries'" icon="pi pi-book" severity="secondary" text @click="visible = true" />
   <Drawer
     v-model:visible="visible"
     header="Stored queries"
