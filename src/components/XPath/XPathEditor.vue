@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Vue core imports
-import { ref, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
 
 // Local components
 import AppXmlEditor from "./AppXmlEditor.vue";
@@ -37,11 +37,6 @@ const successMessage = computed(() => {
           : `Found ${result.value.length} Nodes`
       }`
     : "No results found";
-});
-
-// Persistence logic
-onMounted(() => {
-  // No need to set query and xml values here, as we're using store values directly
 });
 </script>
 
