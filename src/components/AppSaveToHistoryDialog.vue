@@ -5,13 +5,14 @@ import Button from "primevue/button";
 import FloatLabel from "primevue/floatlabel";
 import InputText from "primevue/inputtext";
 import Message from "primevue/message";
+import { useToast } from "primevue/usetoast";
 
 import { useXpathStore } from "../composables/useXpathStore";
 const visible = ref(false);
 
 const { recentQuery, recentXml, addToHistory } = useXpathStore();
 const description = ref("");
-const onSave = () => {
+const onSubmit = () => {
   addToHistory({
     id: (() => {
       return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
@@ -29,21 +30,38 @@ const onSave = () => {
     createdAt: new Date().toLocaleString("de-DE"),
   });
   visible.value = false;
+  useToast().add({
+    severity: "success",
+    summary: "Form is submitted.",
+    life: 3000,
+  });
 };
 </script>
 
 <template>
-  <Button v-tooltip.top="'Save this query'" icon="pi pi-save" severity="secondary" text @click="visible = true" />
+  <Button
+    v-tooltip.top="'Save this query'"
+    icon="pi pi-save"
+    severity="secondary"
+    text
+    @click="visible = true"
+  />
   <Dialog v-model:visible="visible" modal header="Save this XPath query">
     <Message severity="info" class="mb-4">
       <p>All query and xml data is stored in your device's browser</p>
     </Message>
-    <FloatLabel class="mt-8" variant="over">
-      <label for="description">Enter a description</label>
-      <InputText fluid id="description" v-model="description" />
-    </FloatLabel>
-    <template #footer>
-      <Button label="Save" fluid icon="pi pi-check" @click="onSave" />
-    </template>
+    <form @submit.prevent="onSubmit">
+      <FloatLabel class="mt-8 mb-4" variant="over">
+        <label for="description">Enter a description</label>
+        <InputText
+          required
+          name="description"
+          fluid
+          id="description"
+          v-model="description"
+        />
+      </FloatLabel>
+      <Button label="Save" fluid icon="pi pi-check" type="submit" />
+    </form>
   </Dialog>
 </template>
