@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Vue core imports
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 
 // Local components
 import AppXmlEditor from "./AppXmlEditor.vue";
