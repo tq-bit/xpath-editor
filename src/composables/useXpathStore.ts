@@ -45,9 +45,14 @@ export const useXpathStore = () => {
 
   // Recent query logic
   const recentQuery = computed(() => _recentQuery.value);
-  const setRecentQuery = (value: string) => {
-    localStorage.setItem(RECENT_QUERY_KEY, value);
-    _recentQuery.value = value;
+  const setRecentQuery = (value: string | undefined) => {
+    if (value !== undefined) {
+      localStorage.setItem(RECENT_QUERY_KEY, value);
+      _recentQuery.value = value;
+    } else {
+      localStorage.removeItem(RECENT_QUERY_KEY);
+      _recentQuery.value = "";
+    }
   };
 
   const initRecentQuery = () => {

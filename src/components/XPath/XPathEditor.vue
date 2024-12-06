@@ -25,8 +25,6 @@ const { recentQuery, recentXml, setRecentQuery, setRecentXml } =
   useXpathStore();
 
 // XPath editor state
-const query = ref("");
-const xml = ref("");
 const result = ref<AppXPathResult[]>([]);
 const error = ref<string>("");
 
@@ -42,17 +40,8 @@ const successMessage = computed(() => {
 });
 
 // Persistence logic
-watch(query, () => {
-  setRecentQuery(query.value);
-});
-
-watch(xml, () => {
-  setRecentXml(xml.value);
-});
-
 onMounted(() => {
-  query.value = recentQuery.value;
-  xml.value = recentXml.value;
+  // No need to set query and xml values here, as we're using store values directly
 });
 </script>
 
@@ -65,7 +54,8 @@ onMounted(() => {
             <label for="query">Write your XPath query</label>
             <InputText
               id="query"
-              v-model="query"
+              v-model="recentQuery"
+              @update:modelValue="setRecentQuery"
               rows="4"
               cols="40"
               class="w-full"
@@ -88,10 +78,11 @@ onMounted(() => {
       <!-- Splitter left side -->
       <SplitterPanel>
         <AppXmlEditor
-          :query="query"
-          :xml="xml"
+          :query="recentQuery"
+          :xml="recentXml"
           v-model:error="error"
           v-model:result="result"
+          @update:xml="setRecentXml"
         ></AppXmlEditor>
       </SplitterPanel>
       <!-- Splitter right side -->
